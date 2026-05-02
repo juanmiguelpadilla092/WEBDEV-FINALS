@@ -1,0 +1,207 @@
+/* About page */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.about-hero {
+    position: relative;
+    min-height: 60vh;
+    margin-top: 80px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 52%, rgba(0,0,0,1) 100%), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1920');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.about-hero::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #d4af37, transparent);
+}
+
+.about-hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.about-hero h1 {
+    font-size: 85px;
+    line-height: 1;
+    margin-bottom: 20px;
+}
+
+.about-hero p {
+    color: #aaa;
+    font-size: 22px;
+    letter-spacing: 0;
+}
+
+.story-section,
+.team-section {
+    padding: 100px 5%;
+    background: #111;
+}
+
+.story-container {
+    max-width: 900px;
+}
+
+.story-section h2,
+.values-section h2,
+.team-section h2 {
+    font-size: 64px;
+    line-height: 1;
+    margin-bottom: 40px;
+}
+
+.story-copy p {
+    color: #aaa;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 24px;
+}
+
+.values-section {
+    padding: 100px 5%;
+    background: #000;
+    text-align: center;
+}
+
+.values-section h2,
+.team-section h2 {
+    text-align: center;
+    margin-bottom: 70px;
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.value-card {
+    background: #111;
+    border: 1px solid #1a1a1a;
+    padding: 40px 25px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.value-card:hover {
+    border-color: rgba(212, 175, 55, 0.5);
+}
+
+.value-icon {
+    width: 58px;
+    height: 58px;
+    color: #d4af37;
+    margin-bottom: 24px;
+}
+
+.value-card h3 {
+    font-size: 26px;
+    margin-bottom: 16px;
+}
+
+.value-card p {
+    color: #999;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.section-subtitle {
+    color: #aaa;
+    text-align: center;
+    max-width: 650px;
+    margin: -40px auto 70px;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.trainer-card {
+    position: relative;
+    height: 420px;
+    overflow: hidden;
+    border: 1px solid transparent;
+    transition: 0.3s;
+}
+
+.trainer-card:hover {
+    border-color: rgba(212, 175, 55, 0.5);
+}
+
+.trainer-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.7s;
+}
+
+.trainer-card:hover img {
+    transform: scale(1.08);
+}
+
+.trainer-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.45), transparent);
+}
+
+.trainer-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    padding: 28px;
+}
+
+.trainer-overlay h3 {
+    font-size: 28px;
+    margin-bottom: 6px;
+}
+
+.trainer-overlay p {
+    color: #d4af37;
+    font-size: 14px;
+}
+
+@media (max-width: 1100px) {
+    .values-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .about-hero h1,
+    .story-section h2,
+    .values-section h2,
+    .team-section h2 {
+        font-size: 48px;
+    }
+
+    .about-hero p {
+        font-size: 18px;
+    }
+
+    .values-grid,
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+}
