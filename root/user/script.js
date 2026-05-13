@@ -6,12 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
     tabButtons.forEach(btn => {
         btn.addEventListener('click', () => {
             const target = btn.getAttribute('data-tab');
+            const targetPane = document.getElementById(target);
+            if (!targetPane) return;
 
             tabButtons.forEach(b => b.classList.remove('active'));
             tabPanes.forEach(p => p.classList.remove('active'));
 
             btn.classList.add('active');
-            document.getElementById(target).classList.add('active');
+            targetPane.classList.add('active');
         });
     });
 
@@ -67,6 +69,49 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.classList.contains('modal-overlay')) {
             e.target.classList.remove('show');
         }
+    });
+
+    // MEMBERSHIP ACTION POPUPS
+    const memberModal = document.getElementById('member-modal');
+    const memberModalTitle = document.getElementById('member-modal-title');
+    const memberModalBody = document.getElementById('member-modal-body');
+    const memberModalAction = document.getElementById('member-modal-action');
+    const memberModalClose = document.querySelector('.member-modal-close');
+    const memberActionButtons = document.querySelectorAll('.open-member-modal');
+
+    function closeMemberModal() {
+        if (!memberModal) return;
+        memberModal.classList.remove('show');
+        memberModal.setAttribute('aria-hidden', 'true');
+    }
+
+    memberActionButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (!memberModal) return;
+            memberModalTitle.textContent = btn.dataset.modalTitle || 'Membership Update';
+            memberModalBody.textContent = btn.dataset.modalBody || 'Your request is ready.';
+            memberModalAction.textContent = btn.dataset.modalAction || 'Continue';
+            memberModal.classList.add('show');
+            memberModal.setAttribute('aria-hidden', 'false');
+        });
+    });
+
+    if (memberModalClose) {
+        memberModalClose.addEventListener('click', closeMemberModal);
+    }
+
+    if (memberModalAction) {
+        memberModalAction.addEventListener('click', closeMemberModal);
+    }
+
+    if (memberModal) {
+        memberModal.addEventListener('click', (e) => {
+            if (e.target === memberModal) closeMemberModal();
+        });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeMemberModal();
     });
 
     // BILLING NAVIGATION SHORTCUT

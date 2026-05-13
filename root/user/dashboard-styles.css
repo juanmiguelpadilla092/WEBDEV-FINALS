@@ -98,7 +98,7 @@ body {
 /* HERO */
 .sessions-hero {
     position: relative;
-    min-height: 90vh;
+    height: 90vh;
     margin-top: 80px;
     background: linear-gradient(
         to bottom,
