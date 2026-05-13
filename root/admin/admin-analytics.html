@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <title>Analytics - Admin</title>
+    <style>
+        :root {
+            --bg: #000000;
+            --panel: #111111;
+            --panel-alt: #1a1a1a;
+            --border: rgba(255,255,255,0.08);
+            --gold: #d4af37;
+            --text: #f5f5f5;
+            --muted: #aaa;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        .Admin-wrapper { display: flex; min-height: 100vh; }
+
+        .Admin-sidebar {
+            width: 220px;
+            background: rgba(0,0,0,0.95);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 32px 0;
+            position: fixed;
+            inset: 0 auto auto 0;
+            z-index: 100;
+        }
+
+        .Admin-sidebar-logo {
+            padding: 0 24px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 28px;
+        }
+
+        .Admin-sidebar-logo h2 {
+            margin: 0;
+            font-family: 'Oswald', sans-serif;
+            font-size: 20px;
+            letter-spacing: 2px;
+            color: var(--gold);
+        }
+
+        .Admin-sidebar-logo p {
+            margin: 8px 0 0;
+            color: #aaa;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .Admin-nav-link {
+            display: block;
+            padding: 14px 24px;
+            color: rgba(255,255,255,0.75);
+            font-size: 14px;
+            font-weight: 600;
+            border-left: 4px solid transparent;
+            transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+        }
+
+        .Admin-nav-link.active,
+        .Admin-nav-link:hover {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            border-left-color: var(--gold);
+        }
+
+        .Admin-nav-link span { margin-right: 10px; }
+
+        .Admin-sidebar-bottom { margin-top: auto; padding: 0 24px; }
+
+        .Admin-logout-btn {
+            width: 100%;
+            padding: 12px 0;
+            border-radius: 0;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.04);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-flex;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+        }
+
+        .Admin-logout-btn:hover {
+            background: var(--gold);
+            color: #000;
+            border-color: var(--gold);
+        }
+
+        .Admin-main {
+            margin-left: 220px;
+            flex: 1;
+            padding: 40px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            background: var(--bg);
+        }
+
+        .Admin-page-title {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 10px;
+        }
+
+        .Admin-page-title-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 0;
+            background: var(--panel);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-size: 24px;
+        }
+
+        .Admin-page-title h1 {
+            margin: 0;
+            font-family: 'Oswald', sans-serif;
+            font-size: 42px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        .Admin-stats-row,
+        .Analytics-grid-2 {
+            display: grid;
+            gap: 20px;
+        }
+
+        .Admin-stats-row { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+        .Admin-stat-card,
+        .Analytics-box,
+        .Quick-reports-box {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: 24px;
+        }
+
+        .Admin-stat-card label,
+        .Analytics-box-title,
+        .Quick-reports-title {
+            display: block;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #aaa;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .Admin-stat-card h2 {
+            margin: 0;
+            font-family: 'Oswald', sans-serif;
+            font-size: 38px;
+            color: #fff;
+        }
+
+        .Admin-stat-card .Stat-change {
+            margin-top: 8px;
+            color: #8fbc8f;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .Analytics-box-title { margin-bottom: 20px; }
+
+        .Chart-area,
+        .Peak-chart-area {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 16px;
+        }
+
+        .Chart-bar,
+        .Peak-bar {
+            flex: 1;
+            background: rgba(255,255,255,0.08);
+            border-radius: 0;
+            transition: background 0.25s ease;
+        }
+
+        .Chart-bar.highlight,
+        .Peak-bar.peak { background: var(--gold); }
+
+        .Chart-bar:hover { background: rgba(212,175,55,0.8); }
+
+        .Chart-labels,
+        .Peak-labels {
+            display: grid;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .Chart-labels span,
+        .Peak-labels span,
+        .Peak-subtitle,
+        .Dist-header span {
+            color: #aaa;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .Membership-dist-item { margin-bottom: 18px; }
+
+        .Dist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .Dist-header h4 {
+            margin: 0;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .Dist-bar-bg {
+            background: rgba(255,255,255,0.04);
+            border-radius: 0;
+            overflow: hidden;
+            height: 26px;
+        }
+
+        .Dist-bar-fill {
+            height: 100%;
+            background: var(--gold);
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 0;
+        }
+
+        .Top-class-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .Top-class-item:last-child { border-bottom: none; }
+
+        .Top-class-rank {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border-radius: 0;
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-weight: 800;
+        }
+
+        .Top-class-name { color: #fff; font-size: 14px; font-weight: 600; flex: 1; }
+
+        .Top-class-count { color: var(--gold); font-size: 14px; font-weight: 700; }
+
+        .Quick-reports-box {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 24px;
+        }
+
+        .Quick-reports-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .Report-btn,
+        .Table-action-btn,
+        .Page-btn {
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.04);
+            color: #fff;
+            padding: 14px 16px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background 0.25s ease, border-color 0.25s ease;
+        }
+
+        .Report-btn:hover,
+        .Table-action-btn:hover,
+        .Page-btn:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: var(--gold);
+        }
+
+        .Page-btn.active { background: var(--gold); color: #000; border-color: var(--gold); }
+    </style>
+</head>
+<body>
+<div class="Admin-wrapper">
+
+    <!-- Sidebar -->
+    <div class="Admin-sidebar">
+        <div class="Admin-sidebar-logo">
+            <h2>ADMIN</h2>
+            <p>LIMITLESS FITNESS STUDIO</p>
+        </div>
+        <a href="Admin.html" class="Admin-nav-link"><span>👥</span>Manage Users</a>
+        <a href="Admin-analytics.html" class="Admin-nav-link active"><span>📊</span>Analytics</a>
+        <div class="Admin-sidebar-bottom">
+            <a href="index.html" class="Admin-logout-btn">⇠ Log Out</a>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="Admin-main">
+
+        <!-- Title -->
+        <div class="Admin-page-title">
+            <div class="Admin-page-title-icon">📊</div>
+            <h1>ANALYTICS</h1>
+        </div>
+
+        <!-- Top Stats -->
+        <div class="Admin-stats-row">
+            <div class="Admin-stat-card">
+                <label>Monthly Revenue</label>
+                <h2>&#8369;45,680</h2>
+                <p class="Stat-change">↑ 12%</p>
+            </div>
+            <div class="Admin-stat-card">
+                <label>Active Members</label>
+                <h2>1,247</h2>
+                <p class="Stat-change">↑ 8%</p>
+            </div>
+            <div class="Admin-stat-card">
+                <label>Avg Attendance</label>
+                <h2>312<span style="font-size:16px;font-weight:600;color:#888;">/day</span></h2>
+                <p style="font-size:12px;color:#888;margin-top:4px;">stable</p>
+            </div>
+            <div class="Admin-stat-card">
+                <label>Retention Rate</label>
+                <h2>87%</h2>
+                <p class="Stat-change">↑ 3%</p>
+            </div>
+        </div>
+
+        <!-- Row 1: Revenue Trend + Membership Plans -->
+        <div class="Analytics-grid-2">
+
+            <!-- Revenue Trend -->
+            <div class="Analytics-box">
+                <div class="Analytics-box-title">Revenue Trend</div>
+                <div class="Chart-area">
+                    <div class="Chart-bar" style="height:50px;"></div>
+                    <div class="Chart-bar" style="height:65px;"></div>
+                    <div class="Chart-bar" style="height:45px;"></div>
+                    <div class="Chart-bar" style="height:80px;"></div>
+                    <div class="Chart-bar" style="height:60px;"></div>
+                    <div class="Chart-bar highlight" style="height:100px;"></div>
+                    <div class="Chart-bar" style="height:75px;"></div>
+                    <div class="Chart-bar" style="height:90px;"></div>
+                    <div class="Chart-bar" style="height:85px;"></div>
+                    <div class="Chart-bar" style="height:110px;"></div>
+                    <div class="Chart-bar" style="height:95px;"></div>
+                    <div class="Chart-bar" style="height:70px;"></div>
+                </div>
+                <div class="Chart-labels">
+                    <span>J</span><span>F</span><span>M</span><span>A</span>
+                    <span>M</span><span>J</span><span>J</span><span>A</span>
+                    <span>S</span><span>O</span><span>N</span><span>D</span>
+                </div>
+            </div>
+
+            <!-- Membership Plans Distribution -->
+            <div class="Analytics-box">
+                <div class="Analytics-box-title">Membership Plans</div>
+
+                <div class="Membership-dist-item">
+                    <div class="Dist-header">
+                        <h4>BASIC</h4>
+                        <span>387 members</span>
+                    </div>
+                    <div class="Dist-bar-bg">
+                        <div class="Dist-bar-fill" style="width:31%;">31%</div>
+                    </div>
+                </div>
+
+                <div class="Membership-dist-item">
+                    <div class="Dist-header">
+                        <h4>STANDARD</h4>
+                        <span>623 members</span>
+                    </div>
+                    <div class="Dist-bar-bg">
+                        <div class="Dist-bar-fill" style="width:50%;">50%</div>
+                    </div>
+                </div>
+
+                <div class="Membership-dist-item">
+                    <div class="Dist-header">
+                        <h4>PREMIUM</h4>
+                        <span>237 members</span>
+                    </div>
+                    <div class="Dist-bar-bg">
+                        <div class="Dist-bar-fill" style="width:19%;">19%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: Peak Hours + Top Classes -->
+        <div class="Analytics-grid-2">
+
+            <!-- Peak Hours -->
+            <div class="Analytics-box">
+                <div class="Analytics-box-title">Peak Hours</div>
+                <div class="Peak-chart-area">
+                    <div class="Peak-bar" style="height:25px;"></div>
+                    <div class="Peak-bar" style="height:40px;"></div>
+                    <div class="Peak-bar peak" style="height:85px;"></div>
+                    <div class="Peak-bar peak" style="height:90px;"></div>
+                    <div class="Peak-bar" style="height:55px;"></div>
+                    <div class="Peak-bar" style="height:45px;"></div>
+                    <div class="Peak-bar" style="height:35px;"></div>
+                    <div class="Peak-bar" style="height:50px;"></div>
+                    <div class="Peak-bar peak" style="height:80px;"></div>
+                    <div class="Peak-bar peak" style="height:95px;"></div>
+                    <div class="Peak-bar" style="height:60px;"></div>
+                    <div class="Peak-bar" style="height:30px;"></div>
+                </div>
+                <div class="Peak-labels">
+                    <span>6</span><span>7</span><span>8</span><span>9</span>
+                    <span>10</span><span>11</span><span>12</span><span>13</span>
+                    <span>14</span><span>15</span><span>16</span><span>17</span>
+                </div>
+                <p class="Peak-subtitle">Hours (6 AM – 6 PM)</p>
+            </div>
+
+            <!-- Top Classes -->
+            <div class="Analytics-box">
+                <div class="Analytics-box-title">Top Classes</div>
+                <div class="Top-class-item">
+                    <div class="Top-class-rank">1</div>
+                    <div class="Top-class-name">HIIT Training</div>
+                    <div class="Top-class-count">245</div>
+                </div>
+                <div class="Top-class-item">
+                    <div class="Top-class-rank">2</div>
+                    <div class="Top-class-name">Yoga Flow</div>
+                    <div class="Top-class-count">198</div>
+                </div>
+                <div class="Top-class-item">
+                    <div class="Top-class-rank">3</div>
+                    <div class="Top-class-name">Spin Class</div>
+                    <div class="Top-class-count">167</div>
+                </div>
+                <div class="Top-class-item">
+                    <div class="Top-class-rank">4</div>
+                    <div class="Top-class-name">Strength Training</div>
+                    <div class="Top-class-count">142</div>
+                </div>
+                <div class="Top-class-item">
+                    <div class="Top-class-rank">5</div>
+                    <div class="Top-class-name">Pilates</div>
+                    <div class="Top-class-count">128</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Reports -->
+        <div class="Quick-reports-box">
+            <div class="Quick-reports-title">Quick Reports</div>
+            <div class="Quick-reports-buttons">
+                <button class="Report-btn">📥 Export Data</button>
+                <button class="Report-btn">💰 Financial Report</button>
+                <button class="Report-btn">👤 Member Insights</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
